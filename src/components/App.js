@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
+import { Switch, Route } from 'react-router'
 import LinkList from './link-list';
-// import logo from './logo.svg';
-// import './App.css';
+import CreateLink from './create-link';
+import Header from './header';
+import Login from './login';
 
 class App extends Component {
   render() {
-    return <LinkList />
+    return (
+      <div className="center w85">
+        <Header />
+        <div className="ph3 pv1 background-gray">
+          <Switch>
+            <Route exact path="/" component={LinkList} />
+            <Route exact path="/create" component={CreateLink} />
+            <Route exact path="/login" component={Login} />
+          </Switch>
+        </div>
+      </div>
+    )
   }
 }
 
