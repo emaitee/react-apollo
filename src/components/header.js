@@ -7,31 +7,34 @@ class Header extends React.Component {
     render() {
         const authToken = localStorage.getItem(AUTH_TOKEN)
         return (
-            <div className="flex pa1 justify-between nowrap orange">
-                <div className="flex flex-fixed black">
-                    <div className="fw7 mr1">
+            <div 
+                className="flex pa1 justify-between nowrap" 
+                style={{ backgroundColor: 'rgb(19,70,195)', padding:15 }}
+            >
+                <div className="flex flex-fixed white">
+                    <div className="fw7 mr1 logo">
                         Hacker News
                     </div>
-                    <Link to="/" className="ml1 no-underline black">new</Link>
+                    <Link to="/" className="ml1 no-underline white">New</Link>
                     {authToken && (
                         <div className="flex">
                             <div className="ml1">|</div>
-                            <Link to="/create" className="ml1 no-underline black">submit</Link>
+                            <Link to="/create" className="ml1 no-underline white">Submit</Link>
                         </div>
                     )}
                     <div className="flex flex-fixed">
                         {authToken ? (
                             <div 
-                                className="ml1 pointer black"
+                                className="ml1 pointer white"
                                 onClick={() => {
                                     localStorage.removeItem(AUTH_TOKEN)
                                     this.props.history.push('/')
                                 }}
                             >
-                                logout
+                                Logout
                             </div>
                         ): (
-                            <Link to="/login" className="ml1 no-underline black">login</Link>
+                            <Link to="/login" className="ml1 no-underline white">Login</Link>
                         )}
                     </div>
                 </div>
