@@ -2,43 +2,59 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { AUTH_TOKEN } from '../constants';
+import { Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink } from 'reactstrap'
 
 class Header extends React.Component {
+    state = {
+        isOpen: false
+    }
     render() {
         const authToken = localStorage.getItem(AUTH_TOKEN)
         return (
-            <div 
-                className="flex pa1 justify-between nowrap" 
-                style={{ backgroundColor: 'rgb(19,70,195)', padding:15 }}
-            >
-                <div className="flex flex-fixed white">
-                    <div className="fw7 mr1 logo">
-                        Hacker News
-                    </div>
-                    <Link to="/" className="ml1 no-underline white">New</Link>
+            <Navbar color="light" light expand="md" style={{marginBottom: 10}}>
+                <NavbarBrand className="logo" href="/">Hacker News</NavbarBrand>
+                <NavbarToggler onClick={this.toggle} />
+                <Collapse isOpen={this.state.isOpen} navbar>
+                    <Nav className="ml-auto" navbar>
+                    <NavItem>
+                        <Link to="/" >
+                            <NavLink>Home</NavLink>
+                        </Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link to="/search" >
+                            <NavLink>Search</NavLink>
+                        </Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link to="/top" >
+                            <NavLink>Top</NavLink>
+                        </Link>
+                    </NavItem>
                     {authToken && (
-                        <div className="flex">
-                            <div className="ml1">|</div>
-                            <Link to="/create" className="ml1 no-underline white">Submit</Link>
-                        </div>
+                        <NavItem>
+                            <Link to="/create">
+                                <NavLink>Submit</NavLink>
+                            </Link>
+                        </NavItem>
                     )}
-                    <div className="flex flex-fixed">
+                    <NavItem>
                         {authToken ? (
-                            <div 
-                                className="ml1 pointer white"
+                            <NavLink 
                                 onClick={() => {
-                                    localStorage.removeItem(AUTH_TOKEN)
-                                    this.props.history.push('/')
-                                }}
-                            >
-                                Logout
-                            </div>
+                                localStorage.removeItem(AUTH_TOKEN)
+                                this.props.history.push('/')
+                            }}
+                            >Logout</NavLink>
                         ): (
-                            <Link to="/login" className="ml1 no-underline white">Login</Link>
+                            <Link to="/login">
+                                <NavLink>Login</NavLink>
+                            </Link> 
                         )}
-                    </div>
-                </div>
-            </div>
+                    </NavItem>
+                    </Nav>
+                </Collapse>
+            </Navbar>
         )
     }
 }

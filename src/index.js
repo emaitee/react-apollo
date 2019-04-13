@@ -1,18 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+// import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+
 import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { BrowserRouter } from 'react-router-dom'
 import { setContext } from 'apollo-link-context';
+import { split } from 'apollo-link'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
+
 import { AUTH_TOKEN } from './constants';
 
+
+// set environment
+const liveApi = 'https://graphql-prisma-api.herokuapp.com/'
+const localApi = 'http://localhost:4000'
+
 const httpLink = createHttpLink({
-    uri: 'http://localhost:4000'
+    uri: localApi
 })
 
 const authLink = setContext((_, { headers }) => {
@@ -25,8 +37,28 @@ const authLink = setContext((_, { headers }) => {
     }
 })
 
+
+const wsLink = new WebSocketLink({
+    uri: `ws://localhost:4000`,
+    options: {
+        reconnect: true,
+        connectionParams: {
+            authToken: localStorage.getItem(AUTH_TOKEN),
+        }
+    }
+})
+
+const link = split(
+    ({ query }) => {
+        const { kind, operation } = getMainDefinition(query)
+        return kind === 'OperationDefinition' && operation === 'subscription'
+    },
+    wsLink,
+    authLink.concat(httpLink)
+)
+
 const client = new ApolloClient({
-    link: authLink.concat(httpLink),
+    link,
     cache: new InMemoryCache()
 })
 

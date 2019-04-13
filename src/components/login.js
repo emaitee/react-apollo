@@ -2,6 +2,7 @@ import React from 'react'
 import { AUTH_TOKEN } from '../constants'
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
+import { Input, Button, Spinner, Alert, } from 'reactstrap'
 
 const SIGNUP_MUTATION = gql`
     mutation SignupMutation($email: String!, $password: String!, $name: String!) {
@@ -45,44 +46,63 @@ class Login extends React.Component {
                 <div className="flex flex-column">
                     {
                         !login && (
-                            <input 
-                                value={name}
-                                onChange={({target}) => this.setState({ name: target.value })}
-                                type="text"
-                                placeholder="Your name"
-                            />
+                            <div>
+                                <Input 
+                                    value={name}
+                                    onChange={({target}) => this.setState({ name: target.value })}
+                                    type="text"
+                                    placeholder="Your name"
+                                />
+                                <br />
+                            </div>
                         )
                     }
-                    <input 
+                    <Input 
                         value={email}
                         onChange={({target}) => this.setState({ email: target.value })}
                         type="email"
                         placeholder="Your email address"
                     />
-                    <input 
+                    <br />
+                    <Input 
                         value={password}
                         onChange={({target}) => this.setState({ password: target.value })}
                         type="password"
                         placeholder="Choose a safe password"
                     />
-                    
+                    <br />
                 </div>
-                <div className="flex mt3">
+                <div >
                     <Mutation 
                         mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
                         variables={{ email, password, name }}
                         onCompleted={data => this._confirm(data)}
                     >
-                        {mutation => (
-                            <div className="pointer mr2 button" onClick={mutation}>
-                                {login ? 'login' : 'create account'}
-                            </div>
+                        {(mutation, { loading, error }) => (
+                            <>
+                                <div >
+                                    { loading && 
+                                        <div className="offset-md-5 offset-lg-5">
+                                            <Spinner style={{ width: '3rem', height: '3rem' }} type="grow" /> 
+                                        </div>
+                                    }
+                                    { error && 
+                                        <Alert color="danger">
+                                            { error.message }
+                                        </Alert>
+                                    }
+                                </div>
+                                <Button outline color="primary" onClick={mutation} style={{marginRight:10}}>
+                                    {login ? 'Login' : 'Create account'}
+                                </Button>
+                                
+                            </>
                         )}
                     </Mutation>
                     
-                    <div className="pointer button" onClick={() => this.setState({ login: !login })}>
-                        {login ? 'need to create an account?' : 'already have an account?'}
-                    </div>
+                    <Button outline color="success" onClick={() => this.setState({ login: !login })}>
+                        {login ? 'Need to create an account?' : 'Already have an account?'}
+                    </Button>
                 </div>
             </div>
         )
