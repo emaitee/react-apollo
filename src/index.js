@@ -24,7 +24,7 @@ const liveApi = 'https://graphql-prisma-api.herokuapp.com/'
 const localApi = 'http://localhost:4000'
 
 const httpLink = createHttpLink({
-    uri: localApi
+    uri: liveApi
 })
 
 const authLink = setContext((_, { headers }) => {
@@ -39,7 +39,7 @@ const authLink = setContext((_, { headers }) => {
 
 
 const wsLink = new WebSocketLink({
-    uri: `ws://localhost:4000`,
+    uri: `ws://graphql-prisma-api.herokuapp.com/`,
     options: {
         reconnect: true,
         connectionParams: {
