@@ -39,7 +39,7 @@ const authLink = setContext((_, { headers }) => {
 
 
 const wsLink = new WebSocketLink({
-    uri: `ws://graphql-prisma-api.herokuapp.com/`,
+    uri: `ws://https://graphql-prisma-api.herokuapp.com/`,
     options: {
         reconnect: true,
         connectionParams: {
